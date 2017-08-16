@@ -295,7 +295,10 @@ def partition_itemized(schedule):
     schedule table.
     """
     logger.info('Partitioning Schedule %s...', schedule)
-    execute_sql_file('data/sql_partition/partition_schedule_{0}.sql'.format(schedule))
+    execute_sql_file('data/sql_partition/create_temp_partition_schedule_{0}.sql'.format(schedule))
+    execute_sql_file('data/sql_partition/load_temp_schedule_{0}.sql'.format(schedule))
+    execute_sql_file('data/sql_partition/finalize_temp_schedule_{0}.sql'.format(schedule))
+    execute_sql_file('data/sql_partition/rename_temp_schedule_{0}.sql'.format(schedule))
     logger.info('Finished partitioning Schedule %s.', schedule)
 
 @manager.command

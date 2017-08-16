@@ -40,3 +40,7 @@ smart_open==1.5.3
 celery==4.1.0
 celery-once==1.2.0
 redis==2.10.5
+
+# Needed for pandas
+pandas==0.16.2
+xlrd==0.9.4

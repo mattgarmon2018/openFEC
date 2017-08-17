@@ -3,14 +3,14 @@ drop table if exists ofec_sched_a_aggregate_employer_tmp;
 create table ofec_sched_a_aggregate_employer_tmp as
 select
     cmte_id,
-    rpt_yr + rpt_yr % 2 as cycle,
+    election_cycle as cycle,
     contbr_employer as employer,
     sum(contb_receipt_amt) as total,
     count(contb_receipt_amt) as count
-from fec_fitem_sched_a_vw
+from ofec_sched_a_master
 where rpt_yr >= :START_YEAR_AGGREGATE
 and contb_receipt_amt is not null
-and is_individual(contb_receipt_amt, receipt_tp, line_num, memo_cd, memo_text, contbr_id, cmte_id)
+and is_individual
 group by cmte_id, cycle, employer
 ;
 

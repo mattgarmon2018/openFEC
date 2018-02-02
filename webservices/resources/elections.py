@@ -158,6 +158,9 @@ class ElectionView(utils.Resource):
             totals_model.disbursements,
             totals_model.last_cash_on_hand_end_period.label('cash_on_hand_end_period'),
             totals_model.coverage_end_date,
+            sa.case(
+                [(CandidateCommitteeLink.committee_designation == 'P', CandidateCommitteeLink.committee_id)]  # noqa
+            ).label('committee_pcc'),
         )
         pairs = join_candidate_totals(pairs, kwargs, totals_model)
         pairs = filter_candidate_totals(pairs, kwargs, totals_model)
@@ -194,6 +197,7 @@ class ElectionView(utils.Resource):
             sa.func.sum(sa.func.coalesce(pairs.c.cash_on_hand_end_period, 0.0)).label('cash_on_hand_end_period'),
             sa.func.array_agg(sa.distinct(pairs.c.cmte_id)).label('committee_ids'),
             sa.func.max(pairs.c.coverage_end_date).label('coverage_end_date'),
+            sa.func.max(pairs.c.committee_pcc).label('committee_pcc')
         ).group_by(
             pairs.c.candidate_id,
             pairs.c.candidate_election_year
